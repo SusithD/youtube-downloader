@@ -22,9 +22,8 @@ if (!fs.existsSync(downloadsDir)) {
     fs.mkdirSync(downloadsDir);
 }
 
-// Download route
 app.get('/download', async (req, res) => {
-    const { url } = req.query;
+    const { url, quality, audioOnly } = req.query;
 
     if (!url) {
         return res.status(400).send('Invalid YouTube URL');
@@ -33,7 +32,8 @@ app.get('/download', async (req, res) => {
     try {
         // Generate a unique filename
         const output = path.join(downloadsDir, '%(title)s.%(ext)s');
-        const command = `"${ytDlpPath}" "${url}" -o "${output}" -f mp4`;
+        const format = audioOnly === 'true' ? 'bestaudio' : quality || 'best';
+        const command = `"${ytDlpPath}" "${url}" -o "${output}" -f ${format}`;
 
         exec(command, (error, stdout, stderr) => {
             if (error) {

@@ -4,6 +4,7 @@ import './App.css';
 
 function App() {
     const [url, setUrl] = useState('');
+    const [quality, setQuality] = useState('best');
     const [loading, setLoading] = useState(false);
 
     const handleDownload = async () => {
@@ -14,7 +15,7 @@ function App() {
 
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:5000/download?url=${url}`, {
+            const response = await axios.get(`http://localhost:5000/download?url=${url}&quality=${quality}`, {
                 responseType: 'blob',
             });
 
@@ -42,6 +43,12 @@ function App() {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
             />
+            <select value={quality} onChange={(e) => setQuality(e.target.value)}>
+                <option value="best">Best Quality</option>
+                <option value="1080p">1080p</option>
+                <option value="720p">720p</option>
+                <option value="480p">480p</option>
+            </select>
             <button onClick={handleDownload} disabled={loading}>
                 {loading ? 'Downloading...' : 'Download'}
             </button>
